@@ -1,7 +1,9 @@
 ruby-noise-detection
 ====================
 
-Noise Detection Ruby Script
+Noise Detection Ruby Script.
+
+Send email if noise is detected.
 
 Installation
 ------------
