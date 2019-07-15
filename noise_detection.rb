@@ -31,8 +31,8 @@ SAMPLE_DURATION = 5 # seconds
 FORMAT = 'S16_LE'   # this is the format that my USB microphone generates
 THRESHOLD = 0.05
 RECORD_FILENAME='/tmp/noise.wav'
-LOG_FILE='/var/log/noise_detector.log'
-PID_FILE='/etc/noised/noised.pid'
+LOG_FILE='noise_detector.log'
+PID_FILE='noised.pid'
 
 logger = Logger.new(LOG_FILE)
 logger.level = Logger::DEBUG
