@@ -41,17 +41,17 @@ logger.info("Noise detector started @ #{DateTime.now.strftime('%d/%m/%Y %H:%M:%S
 
 
 def self.check_required()
-  if !File.exists?('/usr/bin/arecord')
+  if !File.exist?('/usr/bin/arecord')
     warn "/usr/bin/arecord not found; install package alsa-utils"
     exit 1
   end
 
-  if !File.exists?('/usr/bin/sox')
+  if !File.exist?('/usr/bin/sox')
     warn "/usr/bin/sox not found; install package sox"
     exit 1
   end
 
-  if !File.exists?('/proc/asound/cards')
+  if !File.exist?('/proc/asound/cards')
     warn "/proc/asound/cards not found"
     exit 1
   end
@@ -141,6 +141,7 @@ if options[:verbose]
    logger.debug("Record filename (overwritten): #{RECORD_FILENAME}")
    logger.debug("Destination email: #{options[:email]}")
 end
+exit
 
 #Starting script part
 pid = fork do
@@ -166,11 +167,9 @@ pid = fork do
     logger.debug("Detected amplitude: #{amplitude}") if options[:verbose]
     if amplitude > THRESHOLD
       logger.info("Sound detected!!!")
-  
-  	# Read a file
-	filecontent = File.open(RECORD_FILENAME ,"rb") {|io| io.read}
- 	
-        encoded = [filecontent].pack("m")    # base64 econding
+      # Read a file
+      filecontent = File.open(RECORD_FILENAME ,"rb") {|io| io.read}
+      encoded = [filecontent].pack("m")    # base64 econding
 puts  value = %x[/usr/sbin/sendmail #{options[:email]} << EOF
 subject: WARNING: Noise Detected
 from: home@mornati.net
@@ -183,7 +182,7 @@ EOF]
     else
       logger.debug("No sound detected...")
     end
-end
+  end
 end
 
 Process.detach(pid)
