@@ -172,13 +172,10 @@ pid = fork do
       encoded = [filecontent].pack("m")    # base64 econding
       puts  value = %x[/usr/sbin/sendmail #{options[:email]} << EOF
 subject: WARNING: Noise Detected
-from: home@mornati.net
+from: sergio
 Content-Description: "noise.wav"
 Content-Type: audio/x-wav; name="noise.wav"
-Content-Transfer-Encoding:base64
-Content-Disposition: attachment; filename="noise.wav"
-#{encoded}
-EOF] 
+EOF]
     else
       logger.debug("No sound detected...")
     end
