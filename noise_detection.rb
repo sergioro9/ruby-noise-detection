@@ -30,7 +30,7 @@ HW_DETECTION_CMD = "cat /proc/asound/cards"
 SAMPLE_DURATION = 5 # seconds
 FORMAT = 'S16_LE'   # this is the format that my USB microphone generates
 THRESHOLD = 0.05
-RECORD_FILENAME='/tmp/noise.wav'
+RECORD_FILENAME='noise.wav'
 LOG_FILE='noise_detector.log'
 PID_FILE='noised.pid'
 
@@ -142,7 +142,6 @@ if options[:verbose]
    logger.debug("Record filename (overwritten): #{RECORD_FILENAME}")
    logger.debug("Destination email: #{options[:email]}")
 end
-exit
 
 #Starting script part
 pid = fork do

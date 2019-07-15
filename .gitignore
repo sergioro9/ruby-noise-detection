@@ -17,3 +17,7 @@ tmp
 _yardoc
 doc/
 *.swp
+
+noise.wav
+noise_detector.log
+noised.pid
