@@ -133,6 +133,7 @@ raise OptionParser::MissingArgument if options[:microphone].nil?
 raise OptionParser::MissingArgument if options[:email].nil?
 
 if options[:verbose]
+   puts "writing to: " + LOG_FILE
    logger.debug("Script parameters configurations:")
    logger.debug("SoundCard ID: #{options[:microphone]}")
    logger.debug("Sample Duration: #{SAMPLE_DURATION}")
