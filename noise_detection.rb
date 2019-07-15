@@ -157,8 +157,8 @@ pid = fork do
 
   loop do
     if (stop_process)
-	logger.info("Noise detector stopped @ #{DateTime.now.strftime('%d/%m/%Y %H:%M:%S')}")	
-	break
+      logger.info("Noise detector stopped @ #{DateTime.now.strftime('%d/%m/%Y %H:%M:%S')}")	
+      break
     end
     rec_out = `/usr/bin/arecord -D plughw:#{options[:microphone]},0 -d #{SAMPLE_DURATION} -f #{FORMAT} -t wav #{RECORD_FILENAME} 2>/dev/null`
     out = `/usr/bin/sox -t .wav #{RECORD_FILENAME} -n stat 2>&1`
@@ -170,7 +170,7 @@ pid = fork do
       # Read a file
       filecontent = File.open(RECORD_FILENAME ,"rb") {|io| io.read}
       encoded = [filecontent].pack("m")    # base64 econding
-puts  value = %x[/usr/sbin/sendmail #{options[:email]} << EOF
+      puts  value = %x[/usr/sbin/sendmail #{options[:email]} << EOF
 subject: WARNING: Noise Detected
 from: home@mornati.net
 Content-Description: "noise.wav"
