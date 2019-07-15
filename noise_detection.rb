@@ -33,6 +33,7 @@ THRESHOLD = 0.05
 RECORD_FILENAME='noise.wav'
 LOG_FILE='noise_detector.log'
 PID_FILE='noised.pid'
+ALARM_MESSAGE='Sound detected!!!'
 
 logger = Logger.new(LOG_FILE)
 logger.level = Logger::DEBUG
@@ -166,11 +167,12 @@ pid = fork do
     amplitude = $1.to_f
     logger.debug("Detected amplitude: #{amplitude}") if options[:verbose]
     if amplitude > THRESHOLD
-      logger.info("Sound detected!!!")
+      logger.info(ALARM_MESSAGE)
+      puts ALARM_MESSAGE
       # Read a file
       filecontent = File.open(RECORD_FILENAME ,"rb") {|io| io.read}
       encoded = [filecontent].pack("m")    # base64 econding
-      puts  value = %x[/usr/sbin/sendmail #{options[:email]} << EOF
+      puts value = %x[/usr/sbin/sendmail #{options[:email]} << EOF
 subject: WARNING: Noise Detected
 from: sergio
 Content-Description: "noise.wav"
