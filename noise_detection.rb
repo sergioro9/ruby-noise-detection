@@ -161,6 +161,9 @@ pid = fork do
       break
     end
     rec_out = `/usr/bin/arecord -D plughw:#{options[:microphone]},0 -d #{SAMPLE_DURATION} -f #{FORMAT} -t wav #{RECORD_FILENAME} 2>/dev/null`
+    if options[:verbose]
+      puts rec_out
+    end
     out = `/usr/bin/sox -t .wav #{RECORD_FILENAME} -n stat 2>&1`
     out.match(/Maximum amplitude:\s+(.*)/m)
     amplitude = $1.to_f
