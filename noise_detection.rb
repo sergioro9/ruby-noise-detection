@@ -145,6 +145,7 @@ if options[:verbose]
 end
 
 #Starting script part
+puts
 pid = fork do
   stop_process = false
   Signal.trap("USR1") do
@@ -168,18 +169,20 @@ pid = fork do
     logger.debug("Detected amplitude: #{amplitude}") if options[:verbose]
     if amplitude > THRESHOLD
       logger.info(ALARM_MESSAGE)
-      puts ALARM_MESSAGE
+      print ALARM_MESSAGE + " "
       # Read a file
       filecontent = File.open(RECORD_FILENAME ,"rb") {|io| io.read}
       encoded = [filecontent].pack("m")    # base64 econding
-      puts value = %x[/usr/sbin/sendmail #{options[:email]} << EOF
+      sent = system("/usr/sbin/sendmail #{options[:email]} << EOF
 subject: WARNING: Noise Detected
 from: sergio
-Content-Description: "noise.wav"
-Content-Type: audio/x-wav; name="noise.wav"
-EOF]
+Content-Description: 'noise.wav'
+Content-Type: audio/x-wav; name='noise.wav'
+EOF")
+      puts (sent ? "email sent to #{options[:email]}" :  "could not send email")
     else
       logger.debug("No sound detected...")
+      puts "No sound detected..."
     end
   end
 end
