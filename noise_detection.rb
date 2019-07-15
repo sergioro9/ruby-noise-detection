@@ -145,7 +145,6 @@ if options[:verbose]
 end
 
 #Starting script part
-puts
 pid = fork do
   stop_process = false
   Signal.trap("USR1") do
@@ -173,12 +172,7 @@ pid = fork do
       # Read a file
       filecontent = File.open(RECORD_FILENAME ,"rb") {|io| io.read}
       encoded = [filecontent].pack("m")    # base64 econding
-      sent = system("/usr/sbin/sendmail #{options[:email]} << EOF
-subject: WARNING: Noise Detected
-from: sergio
-Content-Description: 'noise.wav'
-Content-Type: audio/x-wav; name='noise.wav'
-EOF")
+      sent=system("echo \"subject: hello world\ncontent-type: audio/x-wav; name='noise.wav'\" | sendmail #{options[:email]}")
       puts (sent ? "email sent to #{options[:email]}" :  "could not send email")
     else
       logger.debug("No sound detected...")
