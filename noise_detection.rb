@@ -155,13 +155,14 @@ pid = fork do
     stop_process = true 
   end
 
+  i=0
   loop do
     if (stop_process)
       logger.info("Noise detector stopped @ #{DateTime.now.strftime('%d/%m/%Y %H:%M:%S')}")	
       break
     end
-    `/usr/bin/arecord -D plughw:#{options[:microphone]},0 -d #{SAMPLE_DURATION} -f #{FORMAT} -t wav #{RECORD_FILENAME} 2>/dev/null`
-    out = `/usr/bin/sox -t .wav #{RECORD_FILENAME} -n stat 2>&1`
+    `/usr/bin/arecord -D plughw:#{options[:microphone]},0 -d #{SAMPLE_DURATION} -f #{FORMAT} -t wav #{i.to_s}#{RECORD_FILENAME} 2>/dev/null`
+    out = `/usr/bin/sox -t .wav #{i.to_s}#{RECORD_FILENAME} -n stat 2>&1`
     out.match(/Maximum amplitude:\s+(.*)/m)
     amplitude = $1.to_f
     logger.debug("Detected amplitude: #{amplitude}") if options[:verbose]
@@ -169,7 +170,7 @@ pid = fork do
       logger.info(ALARM_MESSAGE)
       print ALARM_MESSAGE + " "
       # Read a file
-      filecontent = File.open(RECORD_FILENAME ,"rb") {|io| io.read}
+      filecontent = File.open(i.to_s+RECORD_FILENAME ,"rb") {|io| io.read}
       encoded = [filecontent].pack("m")    # base64 econding
       sent=system("echo \"subject: hello world\ncontent-type: audio/x-wav; name='noise.wav'\" | sendmail #{options[:email]}")
       puts (sent ? "email sent to #{options[:email]}" :  "could not send email")
@@ -177,6 +178,7 @@ pid = fork do
       logger.debug("No sound detected...")
       puts "No sound detected..."
     end
+    i=i+1
   end
 end
 
